@@ -7,8 +7,8 @@ public class MapGenerator : MonoBehaviour
 {
     // Start is called before the first frame update
     public GlobalData globalData;
-    public int sizeX = 0;
-    public int sizeY = 0;
+    private int sizeX = 0;
+    private int sizeY = 0;
     public int seed = 0;
     public bool randomizeSeed = false;
     private float[,] map;
@@ -36,7 +36,7 @@ public class MapGenerator : MonoBehaviour
         if (randomizeSeed)
             seed = (int)(Random.value * 1000);
         Random.InitState(seed);
-        float scale = 8f;
+        float scale = 16f;
         float initX = Random.Range(-1000f, 1000f);
         float initY = Random.Range(-1000f, 1000f);
         for (int i = 0; i < map.GetLength(0); i++)

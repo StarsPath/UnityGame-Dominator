@@ -16,7 +16,7 @@ public class Display : MonoBehaviour
     public Tilemap structures;
 
     public Tile[] terrainTiles;
-    public Tile[] unitTiles;
+    //public Tile[] unitTiles;
     public Tile[] structureTiles;
 
     void Start()
@@ -27,13 +27,15 @@ public class Display : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        initialize();
+        drawTerrain();
+        //drawUnits();
     }
     public void initialize()
     {
         terrainData = globalData.getTerrain();
         terrainTiles = globalData.getTerrainTiles();
-        unitTiles = globalData.getUnitTiles();
+        //unitTiles = globalData.getUnitTiles();
         structureTiles = globalData.getStructureTiles();
     }
     public void drawTerrain()
@@ -52,7 +54,7 @@ public class Display : MonoBehaviour
         {
             for (int j = 0; j < unitData.GetLength(1); j++)
             {
-                units.SetTile(new Vector3Int(i, j, 0), unitTiles[(int)unitData[i, j].getType()]);
+                //units.SetTile(new Vector3Int(i, j, 0), unitTiles[(int)unitData[i, j].getType()]);
             }
         }
     }

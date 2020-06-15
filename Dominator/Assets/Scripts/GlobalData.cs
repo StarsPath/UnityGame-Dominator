@@ -7,6 +7,8 @@ using UnityEditor;
 public class GlobalData : MonoBehaviour
 {
     // Start is called before the first frame update
+    public MapGenerator mapGen;
+
     public int mapSizeX;
     public int mapSizeY;
     public int[,] terrain;
@@ -14,12 +16,15 @@ public class GlobalData : MonoBehaviour
     public Tilemap structures;
 
     public Tile[] terrainTiles;
-    public Tile[] unitTiles;
+    public Unit[] unitTiles;
     public Tile[] structureTiles;
     
     void Start()
     {
-        
+        terrain = new int[mapSizeX, mapSizeY];
+        units = new Unit[mapSizeX, mapSizeY];
+        mapGen.initialize();
+        mapGen.generate();
     }
 
     // Update is called once per frame
@@ -56,7 +61,7 @@ public class GlobalData : MonoBehaviour
     {
         return this.structures;
     }
-    public Tile[] getUnitTiles()
+    public Unit[] getUnitTiles()
     {
         return unitTiles;
     }
