@@ -73,7 +73,7 @@ public class Unit
                 this.ATK = 40;
                 this.cost = 300;
                 this.mobility = 4;
-                this.range = 5;
+                this.range = 4;
                 this.constructTime = 3;
                 break;
             case Type.Sniper:
@@ -128,16 +128,6 @@ public class Unit
         this.constructTime = constructTime;
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public Vector2Int getPos()
     {
         return this.pos;

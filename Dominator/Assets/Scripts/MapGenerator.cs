@@ -71,7 +71,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     trueMap[i, j] = 3;
                 }
-                else if (map[i, j] > 55)     //Forest
+                else if (map[i, j] > 50)     //Forest
                 {
                     trueMap[i, j] = 2;
                 }

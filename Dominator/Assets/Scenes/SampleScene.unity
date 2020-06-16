@@ -544,7 +544,6 @@ MonoBehaviour:
   mapGen: {fileID: 925068981}
   mapSizeX: 100
   mapSizeY: 100
-  structures: {fileID: 0}
   terrainTiles:
   - {fileID: 11400000, guid: 98534ed8b4da5cb4eb717ab79fb7dce5, type: 2}
   - {fileID: 11400000, guid: 77958d9c26226204bae1bef31dcce398, type: 2}
@@ -628,9 +627,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalData: {fileID: 1164440668}
   terrain: {fileID: 516755425}
-  units: {fileID: 0}
   structures: {fileID: 0}
   terrainTiles: []
+  unitObj: []
+  structureObj: []
   structureTiles: []
 --- !u!4 &1370304035
 Transform:
@@ -645,4 +645,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1828475117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1828475118}
+  m_Layer: 0
+  m_Name: Units
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1828475118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828475117}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.94024146, y: 0.14027904, z: -0.56152344}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
