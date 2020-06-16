@@ -43,7 +43,16 @@ public class MapGenerator : MonoBehaviour
         {
             for (int j = 0; j < map.GetLength(1); j++)
             {
-                map[i, j] = Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 100;
+                map[i, j] = Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
+            }
+        }
+        initX = Random.Range(-1000f, 1000f);
+        initY = Random.Range(-1000f, 1000f);
+        for (int i = 0; i < map.GetLength(0); i++)
+        {
+            for (int j = 0; j < map.GetLength(1); j++)
+            {
+                map[i, j] += Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
             }
         }
         convertTrueMap();
@@ -66,7 +75,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     trueMap[i, j] = 2;
                 }
-                else if (map[i, j] > 35)     //Ground
+                else if (map[i, j] > 40)     //Ground
                 {
                     trueMap[i, j] = 1;
                 }
