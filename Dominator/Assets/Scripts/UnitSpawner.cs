@@ -6,11 +6,11 @@ public class UnitSpawner : MonoBehaviour
 {
     // Start is called before the first frame update
     public GlobalData globalData;
-    public Unit[,] unitData;
+    //public Unit[,] unitData;
 
     public int x;
     public int y;
-    public Unit.Type type;
+    //public Unit.Type type;
     public bool enemy;
 
     void Start()
@@ -23,7 +23,7 @@ public class UnitSpawner : MonoBehaviour
     {
         
     }
-    public void initialize()
+    /*public void initialize()
     {
         unitData = globalData.getUnits();
     }
@@ -36,5 +36,5 @@ public class UnitSpawner : MonoBehaviour
     {
         Unit unit = new Unit(type, new Vector2Int(x, y), enemy);
         unitData[x, y] = unit;
-    } 
+    } */
 }

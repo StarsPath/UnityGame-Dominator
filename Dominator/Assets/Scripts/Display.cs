@@ -8,8 +8,8 @@ public class Display : MonoBehaviour
     // Start is called before the first frame update
     public GlobalData globalData;
     public int[,] terrainData;
-    public Unit[,] unitData;
-    public Structure[,] structureData;
+    //public UnitScriptable[,] unitData;
+    //public Structure[,] structureData;
 
 
     public Tilemap terrain;
@@ -37,12 +37,12 @@ public class Display : MonoBehaviour
     public void initialize()
     {
         terrainData = globalData.getTerrain();
-        unitData = globalData.getUnits();
-        structureData = globalData.getStructure();
+        //unitData = globalData.getUnits();
+        //structureData = globalData.getStructure();
 
 
         terrainTiles = globalData.getTerrainTiles();
-        structureTiles = globalData.getStructureTiles();
+        //structureTiles = globalData.getStructureTiles();
     }
     public void drawTerrain()
     {
@@ -54,7 +54,7 @@ public class Display : MonoBehaviour
             }
         }
     }
-    public void drawUnits()
+    /*public void drawUnits()
     {
         for (int i = 0; i < unitData.GetLength(0); i++)
         {
@@ -62,12 +62,12 @@ public class Display : MonoBehaviour
             {
                 if(unitData[i,j] != null)
                 {
-                    Instantiate(unitObj[(int)unitData[i, j].getType()], new Vector3Int(i, j, 0), Quaternion.identity, GameObject.Find("Units").transform);
+                    //Instantiate(unitObj[(int)unitData[i, j].getType()], new Vector3Int(i, j, 0), Quaternion.identity, GameObject.Find("Units").transform);
                 }
             }
         }
-    }
-    public void drawStructures()
+    }*/
+    /*public void drawStructures()
     {
         for (int i = 0; i < structureData.GetLength(0); i++)
         {
@@ -82,5 +82,5 @@ public class Display : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }

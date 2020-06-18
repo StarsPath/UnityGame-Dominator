@@ -12,17 +12,17 @@ public class GlobalData : MonoBehaviour
     public int mapSizeX;
     public int mapSizeY;
     public int[,] terrain;
-    public Unit[,] units;
-    public Structure[,] structures;
+    //public Unit[,] units;
+    //public Structure[,] structures;
 
     public Tile[] terrainTiles;
-    public Tile[] structureTiles;
+    //public Tile[] structureTiles;
     
     void Start()
     {
         terrain = new int[mapSizeX, mapSizeY];
-        structures = new Structure[mapSizeX, mapSizeY];
-        units = new Unit[mapSizeX, mapSizeY];
+        //structures = new Structure[mapSizeX, mapSizeY];
+        //units = new Unit[mapSizeX, mapSizeY];
         mapGen.initialize();
         mapGen.generate();
     }
@@ -45,28 +45,28 @@ public class GlobalData : MonoBehaviour
     {
         return this.terrain;
     }
-    public void setUnits(Unit[,] units)
+    /*public void setUnits(Unit[,] units)
     {
         this.units = units;
     }
     public Unit[,] getUnits()
     {
         return this.units;
-    }
-    public void setStructure(Structure[,] structure)
+    }*/
+    /*public void setStructure(Structure[,] structure)
     {
         this.structures = structure;
     }
     public Structure[,] getStructure()
     {
         return this.structures;
-    }
+    }*/
     public Tile[] getTerrainTiles()
     {
         return terrainTiles;
     }
-    public Tile[] getStructureTiles()
+    /*public Tile[] getStructureTiles()
     {
         return structureTiles;
-    }
+    }*/
 }
