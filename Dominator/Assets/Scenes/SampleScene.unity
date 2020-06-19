@@ -542,6 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGen: {fileID: 925068981}
+  display: {fileID: 1370304034}
   mapSizeX: 100
   mapSizeY: 100
   terrainTiles:
@@ -550,6 +551,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dc398d3882f91e4d9564f290ac8cad7, type: 2}
   - {fileID: 11400000, guid: 36b69fb8156598e47a8511aa32ecbb97, type: 2}
   - {fileID: 11400000, guid: f60a98a14d4d59640bba2abcb22f45a9, type: 2}
+  unitSprites:
+  - {fileID: 21300000, guid: 28752eb23003be1419c91f0ac8d5c0f2, type: 3}
+  - {fileID: 21300000, guid: c4cdb361a66728941ab37f747a9da448, type: 3}
+  - {fileID: 21300000, guid: 1302a6c222c839742bfbb7d1d1df345c, type: 3}
+  - {fileID: 21300000, guid: 0d22930b554e0584693229ee28852a3f, type: 3}
+  - {fileID: 21300000, guid: bc29a23773daf0b419caa10144c7620e, type: 3}
 --- !u!1 &1207646644
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,11 +699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalData: {fileID: 1164440668}
   terrain: {fileID: 516755425}
-  structures: {fileID: 0}
   terrainTiles: []
-  unitObj: []
-  structureObj: []
-  structureTiles: []
 --- !u!4 &1370304035
 Transform:
   m_ObjectHideFlags: 0

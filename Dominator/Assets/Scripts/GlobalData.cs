@@ -8,23 +8,22 @@ public class GlobalData : MonoBehaviour
 {
     // Start is called before the first frame update
     public MapGenerator mapGen;
+    public Display display;
 
     public int mapSizeX;
     public int mapSizeY;
     public int[,] terrain;
-    //public Unit[,] units;
-    //public Structure[,] structures;
 
     public Tile[] terrainTiles;
-    //public Tile[] structureTiles;
+    public Sprite[] unitSprites;
     
     void Start()
     {
         terrain = new int[mapSizeX, mapSizeY];
-        //structures = new Structure[mapSizeX, mapSizeY];
-        //units = new Unit[mapSizeX, mapSizeY];
         mapGen.initialize();
         mapGen.generate();
+        display.initialize();
+        display.drawTerrain();
     }
 
     // Update is called once per frame
@@ -45,28 +44,12 @@ public class GlobalData : MonoBehaviour
     {
         return this.terrain;
     }
-    /*public void setUnits(Unit[,] units)
-    {
-        this.units = units;
-    }
-    public Unit[,] getUnits()
-    {
-        return this.units;
-    }*/
-    /*public void setStructure(Structure[,] structure)
-    {
-        this.structures = structure;
-    }
-    public Structure[,] getStructure()
-    {
-        return this.structures;
-    }*/
     public Tile[] getTerrainTiles()
     {
         return terrainTiles;
     }
-    /*public Tile[] getStructureTiles()
+    public Sprite[] getUnitSprites()
     {
-        return structureTiles;
-    }*/
+        return unitSprites;
+    }
 }

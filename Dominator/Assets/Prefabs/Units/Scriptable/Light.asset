@@ -10,17 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0dd78a879df833d42b91f41a086cc323, type: 3}
-  m_Name: Scout
+  m_Name: Light
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 28752eb23003be1419c91f0ac8d5c0f2, type: 3}
   type: 1
-  HPMax: 100
-  HPCurrent: 100
-  ATK: 10
-  cost: 100
+  HPMax: 150
+  HPCurrent: 150
+  ATK: 25
+  cost: 150
   mobility: 5
   range: 5
   constructTime: 2
-  attacked: 0
-  moved: 0
-  ended: 0

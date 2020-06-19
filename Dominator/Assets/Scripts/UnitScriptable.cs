@@ -7,11 +7,10 @@ public class UnitScriptable : ScriptableObject
 {
     public enum Type
     {
-        Null,
         Scout,
         Light,
-        Heavy,
-        Sniper,
+        //Heavy,
+        //Sniper,
         Knight,
         Artillery,
         Interceptor
@@ -20,7 +19,6 @@ public class UnitScriptable : ScriptableObject
     //private bool enemy;
 
     [SerializeField]
-    public Sprite sprite;
 
     public Type type;
     public int HPMax;
