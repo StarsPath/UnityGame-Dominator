@@ -1,15 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
 public class UnitDisplay : MonoBehaviour
 {
     // Start is called before the first frame update
+    public enum Status
+    {
+        Unselected,
+        Selected,
+        Moved,
+        Attacked,
+        Ended
+    }
+
     public GlobalData globalData;
     public UnitScriptable unit;
     public Image healthBar;
-    SpriteRenderer sp;
+    private SpriteRenderer sp;
 
     private UnitScriptable.Type type;
     public Vector2Int pos;
@@ -23,9 +33,10 @@ public class UnitDisplay : MonoBehaviour
 
     public bool enemy;
 
-    public bool attacked;
-    public bool moved;
-    public bool ended;
+    public Status status;
+
+    public int[,] movementOverlay;
+    public int[,] attackOverlay;
 
     void Start()
     {
@@ -45,6 +56,10 @@ public class UnitDisplay : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, 0, globalData.getSize().y-1);
         transform.position = new Vector3(pos.x + 0.5f, pos.y + 0.5f, 0);
     }
+    void OnMouseOver()
+    {
+        Debug.Log("Hovering");
+    }
     void initialize()
     {
         type = unit.type;
@@ -56,12 +71,47 @@ public class UnitDisplay : MonoBehaviour
         range = unit.range;
         constructTime = unit.constructTime;
 
-        attacked = false;
-        moved = false;
-        ended = false;
+        status = Status.Unselected;
+
         if (enemy)
         {
             sp.flipX = true;
         }
+    }
+    public void pathFind(int playerY, int playerX, int mobility)
+    {
+        int[,] cost = globalData.getTerrainCost();
+        if (mobility >= 0)
+        {
+            movementOverlay[playerY, playerX] = 1;
+        }
+        if (!(playerY + 1 > globalData.mapSizeY))
+            if (mobility - cost[playerY + 1, playerX] >= 0)
+            {
+                pathFind(playerY + 1, playerX, mobility - cost[playerY + 1, playerX]);
+            }
+        if (!(playerY - 1 < 0))
+            if (mobility - cost[playerY - 1, playerX] >= 0)
+            {
+                pathFind(playerY - 1, playerX, mobility - cost[playerY - 1, playerX]);
+            }
+        if (!(playerX + 1 > globalData.mapSizeX))
+            if (mobility - cost[playerY, playerX + 1] >= 0)
+            {
+                pathFind(playerY, playerX + 1, mobility - cost[playerY, playerX + 1]);
+            }
+        if (!(playerX - 1 < 0))
+            if (mobility - cost[playerY, playerX - 1] >= 0)
+            {
+                pathFind(playerY, playerX - 1, mobility - cost[playerY, playerX - 1]);
+            }
+    }
+    public void showMovementOverlay()
+    {
+        pathFind(pos.y, pos.x, mobility);
+    }
+    public void showAttackOverlay()
+    {
+
     }
 }

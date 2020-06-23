@@ -13,6 +13,7 @@ public class GlobalData : MonoBehaviour
     public int mapSizeX;
     public int mapSizeY;
     public int[,] terrain;
+    public int[,] terrainCost;
 
     public Tile[] terrainTiles;
     public Sprite[] unitSprites;
@@ -40,9 +41,17 @@ public class GlobalData : MonoBehaviour
     {
         this.terrain = terrain;
     }
+    public void setTerrainCost(int[,] cost)
+    {
+        this.terrainCost = cost;
+    }
     public int[,] getTerrain()
     {
-        return this.terrain;
+        return terrain;
+    }
+    public int[,] getTerrainCost()
+    {
+        return terrainCost;
     }
     public Tile[] getTerrainTiles()
     {

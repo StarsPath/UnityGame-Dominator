@@ -13,6 +13,7 @@ public class MapGenerator : MonoBehaviour
     public bool randomizeSeed = false;
     private float[,] map;
     private int[,] trueMap;
+    private int[,] costMap;
     void Start()
     {
         
@@ -30,6 +31,7 @@ public class MapGenerator : MonoBehaviour
         sizeY = Mathf.Clamp(size.y, 10, 1000);
         map = new float[sizeX, sizeY];
         trueMap = new int[sizeX, sizeY];
+        costMap = new int[sizeX, sizeY];
     }
     public void generate()
     {
@@ -86,5 +88,34 @@ public class MapGenerator : MonoBehaviour
             }
         }
         globalData.setTerrain(trueMap);
+        generateCostMap();
+    }
+    public void generateCostMap()
+    {
+        for (int i = 0; i < map.GetLength(0); i++)
+        {
+            for (int j = 0; j < map.GetLength(1); j++)
+            {
+                switch (trueMap[i, j])
+                {
+                    case 1: 
+                        costMap[i, j] = 1;
+                        break;
+                    case 0:
+                        costMap[i, j] = 2;
+                        break;
+                    case 2:
+                        costMap[i, j] = 2;
+                        break;
+                    case 3:
+                        costMap[i, j] = 2;
+                        break;
+                    case 4:
+                        costMap[i, j] = 3;
+                        break;
+                }
+            }
+        }
+        globalData.setTerrainCost(costMap);
     }
 }
