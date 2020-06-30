@@ -15,8 +15,11 @@ public class GlobalData : MonoBehaviour
     public int[,] terrain;
     public int[,] terrainCost;
 
-    public Tile[] terrainTiles;
+    public GameObject[] terrainTiles;
     public Sprite[] unitSprites;
+
+    private GameObject selectedTile;
+
     
     void Start()
     {
@@ -53,7 +56,7 @@ public class GlobalData : MonoBehaviour
     {
         return terrainCost;
     }
-    public Tile[] getTerrainTiles()
+    public GameObject[] getTerrainTiles()
     {
         return terrainTiles;
     }

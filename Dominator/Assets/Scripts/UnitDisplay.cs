@@ -54,7 +54,7 @@ public class UnitDisplay : MonoBehaviour
         healthBar.fillAmount = (float)HPCurrent / HPMax;
         pos.x = Mathf.Clamp(pos.x, 0, globalData.getSize().x-1);
         pos.y = Mathf.Clamp(pos.y, 0, globalData.getSize().y-1);
-        transform.position = new Vector3(pos.x + 0.5f, pos.y + 0.5f, 0);
+        transform.position = new Vector3(pos.x, pos.y, 0);
     }
     void OnMouseOver()
     {
