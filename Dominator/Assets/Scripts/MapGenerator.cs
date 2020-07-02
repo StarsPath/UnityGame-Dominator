@@ -41,18 +41,18 @@ public class MapGenerator : MonoBehaviour
         float scale = 16f;
         float initX = Random.Range(-1000f, 1000f);
         float initY = Random.Range(-1000f, 1000f);
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int j = 0; j < sizeY; j++)
             {
                 map[i, j] = Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
             }
         }
         initX = Random.Range(-1000f, 1000f);
         initY = Random.Range(-1000f, 1000f);
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int j = 0; j < sizeY; j++)
             {
                 map[i, j] += Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
             }
@@ -61,9 +61,9 @@ public class MapGenerator : MonoBehaviour
     }
     public void convertTrueMap()
     {
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int j = 0; j < sizeY; j++)
             {
                 if (map[i, j] > 80)   //Mountain
                 {
@@ -88,34 +88,57 @@ public class MapGenerator : MonoBehaviour
             }
         }
         globalData.setTerrain(trueMap);
-        generateCostMap();
     }
-    public void generateCostMap()
+    public int getCost(int tileID)
     {
-        for (int i = 0; i < map.GetLength(0); i++)
+        switch (tileID)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            case 1:
+                return 1;
+            case 0:
+            case 2:
+            case 3:
+                return 2;
+            case 4:
+                return 3;
+        }
+        return 1;
+    }
+    public Node[,] generateGraph()
+    {
+        Node[,] graph = new Node[sizeX, sizeY];
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
             {
-                switch (trueMap[i, j])
-                {
-                    case 1: 
-                        costMap[i, j] = 1;
-                        break;
-                    case 0:
-                        costMap[i, j] = 2;
-                        break;
-                    case 2:
-                        costMap[i, j] = 2;
-                        break;
-                    case 3:
-                        costMap[i, j] = 2;
-                        break;
-                    case 4:
-                        costMap[i, j] = 3;
-                        break;
-                }
+                graph[i, j] = new Node();
+                /*if (i > 0)
+                    graph[i, j].neighbours.Add(graph[i - 1, j]);
+                if (i < sizeX-1)
+                    graph[i, j].neighbours.Add(graph[i + 1, j]);
+                if (j > 0)
+                    graph[i, j].neighbours.Add(graph[i, j - 1]);
+                if (j < sizeY-1)
+                    graph[i, j].neighbours.Add(graph[i, j + 1]);*/
+                graph[i, j].cost = getCost(trueMap[i,j]);
+                graph[i, j].x = i;
+                graph[i, j].y = j;            
             }
         }
-        globalData.setTerrainCost(costMap);
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+                if (i > 0)
+                    graph[i, j].neighbours.Add(graph[i - 1, j]);
+                if (i < sizeX - 1)
+                    graph[i, j].neighbours.Add(graph[i + 1, j]);
+                if (j > 0)
+                    graph[i, j].neighbours.Add(graph[i, j - 1]);
+                if (j < sizeY - 1)
+                    graph[i, j].neighbours.Add(graph[i, j + 1]);
+            }
+        }
+        return graph;
     }
 }

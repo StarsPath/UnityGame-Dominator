@@ -15,10 +15,10 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         size = globalData.getSize();
-        Vector3 pos = transform.position;
-        pos.x = (size.x - 1) / 2;
-        pos.y = (size.y - 1) / 2;
-        transform.position = pos;
+        //Vector3 pos = transform.position;
+        //pos.x = (size.x - 1) / 2;
+        //pos.y = (size.y - 1) / 2;
+        //transform.position = pos;
     }
 
     // Update is called once per frame

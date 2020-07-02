@@ -35,6 +35,7 @@ public class Display : MonoBehaviour
                 //terrain.SetTile(new Vector3Int(i, j, 0), terrainTiles[terrainData[i, j]]);
                 GameObject terrainTile = Instantiate(terrainTiles[terrainData[i, j]], new Vector3(i, j, 1), Quaternion.identity, GameObject.Find("Map").transform);
                 terrainTile.GetComponent<ClickableTile>().setData(i, j, null, false);
+                globalData.terrainGameObjects[i, j] = terrainTile;
             }
         }
     }

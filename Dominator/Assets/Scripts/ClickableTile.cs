@@ -10,15 +10,24 @@ public class ClickableTile : MonoBehaviour
     public bool selected;
 
     private SpriteRenderer sp;
+    private Collider2D co;
     void Start()
     {
         sp = gameObject.GetComponent<SpriteRenderer>();
+        co = gameObject.GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        /*if (co.OverlapPoint(mousePosition))
+        {
+            setSelected();
+        }
+        else
+            unselected();*/
     }
     public void setData(int x, int y, GameObject unitOnTile, bool selected)
     {
@@ -27,9 +36,19 @@ public class ClickableTile : MonoBehaviour
         this.unitOnTile = unitOnTile;
         this.selected = selected;
     }
+    public void setSelected()
+    {
+        selected = true;
+        toggleSelected();
+
+    }
+    public void unselected()
+    {
+        selected = false;
+        toggleSelected();
+    }
     public void toggleSelected()
     {
-        selected = !selected;
         if (selected)
         {
             sp.color = new Color(0.9f, 0.9f, 0.9f, 1f);
@@ -37,12 +56,4 @@ public class ClickableTile : MonoBehaviour
         else
             sp.color = new Color(1f, 1f, 1f, 1f);
     }
-    /*private void OnMouseOver()
-    {
-        if(Input.GetMouseButtonDown(0))
-            sp.color = new Color(0.9f, 0.9f, 0.9f, 1f);
-        if(Input.GetMouseButtonDown(1))
-            sp.color = new Color(1f, 1f, 1f, 1f);
-        //Debug.Log("HI");
-    }*/
 }
