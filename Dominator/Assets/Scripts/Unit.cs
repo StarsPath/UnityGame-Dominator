@@ -84,9 +84,19 @@ public class Unit : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        globalData.setSelectedUnit(gameObject);
-        //globalData.showDataTest();
-        globalData.pathFind();
-        //globalData.showPath();
+        if (globalData.hasSelectedUnit())
+        {
+            globalData.resetSeclection();
+        }
+        else
+        {
+            globalData.setSelectedUnit(gameObject);
+            globalData.pathFind();
+        }
+    }
+    public void moveTo(int x, int y)
+    {
+        pos.x = x;
+        pos.y = y;
     }
 }

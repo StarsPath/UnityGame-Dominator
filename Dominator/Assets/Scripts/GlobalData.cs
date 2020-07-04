@@ -25,6 +25,7 @@ public class GlobalData : MonoBehaviour
     public Node[,] graph;
     public GameObject[,] units;
     private GameObject selectedUnit;
+    public List<Node> selectedTiles;
 
     
     void Start()
@@ -57,10 +58,10 @@ public class GlobalData : MonoBehaviour
         prev[source] = null;
 
         Unit unitData = selectedUnit.GetComponent<Unit>();
-        int newXmin = Mathf.Clamp(unitData.pos.x - unitData.mobility, 0, mapSizeX);
-        int newYmin = Mathf.Clamp(unitData.pos.y - unitData.mobility, 0, mapSizeY);
-        int newXmax = Mathf.Clamp(unitData.pos.x + unitData.mobility, 0, mapSizeX);
-        int newYmax = Mathf.Clamp(unitData.pos.y + unitData.mobility, 0, mapSizeY);
+        int newXmin = Mathf.Clamp(unitData.pos.x - unitData.mobility, 0, mapSizeX-1);
+        int newYmin = Mathf.Clamp(unitData.pos.y - unitData.mobility, 0, mapSizeY-1);
+        int newXmax = Mathf.Clamp(unitData.pos.x + unitData.mobility, 0, mapSizeX-1);
+        int newYmax = Mathf.Clamp(unitData.pos.y + unitData.mobility, 0, mapSizeY-1);
         Vector2Int minPoint = new Vector2Int(newXmin, newYmin);
         Vector2Int maxPoint = new Vector2Int(newXmax, newYmax);
 
@@ -86,17 +87,27 @@ public class GlobalData : MonoBehaviour
             foreach (Node v in u.neighbours)
             {
                 //Debug.Log(u.neighbours);
+                Debug.Log(units[1, 1]);
                 float alt = dist[u] + u.distanceTo(v) + v.cost-1;
                 if (alt > selectedUnit.GetComponent<Unit>().mobility)
                     continue;
-                if (alt < dist[v])
+                if (v.x < newXmax && v.x >= newXmin && v.y < newYmax && v.y >= newYmin)
                 {
-                    dist[v] = alt;
-                    prev[v] = u;
+                    if(units[v.x, v.y] != null)
+                    {
+                        //alt = Mathf.Infinity;
+                        continue;
+                    }
+                    if (alt < dist[v])
+                    {
+                        dist[v] = alt;
+                        prev[v] = u;
+                    }
                 }
             }
         }
-        showPath(dist.Where(n => n.Value < Mathf.Infinity).Select(n => n.Key).ToList());
+        selectedTiles = dist.Where(n => n.Value < Mathf.Infinity).Select(n => n.Key).ToList();
+        showPath(selectedTiles);
     }
     public void showPath(List<Node> dist)
     {
@@ -108,7 +119,26 @@ public class GlobalData : MonoBehaviour
             }
         }
     }
-
+    public void resetSeclection()
+    {
+        if (selectedUnit)
+        {
+            selectedUnit = null;
+            foreach (Node n in selectedTiles)
+            {
+                terrainGameObjects[n.x, n.y].GetComponent<ClickableTile>().unselected();
+            }
+            selectedTiles.RemoveAll(n => true);
+        }
+    }
+    public void moveUnitTo(int x, int y)
+    {
+        Unit unitData = selectedUnit.GetComponent<Unit>();
+        units[unitData.pos.x, unitData.pos.y] = null;
+        units[x, y] = selectedUnit;
+        selectedUnit.GetComponent<Unit>().moveTo(x, y);
+        resetSeclection();
+    }
 
 
 
@@ -138,5 +168,9 @@ public class GlobalData : MonoBehaviour
     public void setSelectedUnit(GameObject unit)
     {
         selectedUnit = unit;
+    }
+    public bool hasSelectedUnit()
+    {
+        return selectedUnit == null ? false : true;
     }
 }
