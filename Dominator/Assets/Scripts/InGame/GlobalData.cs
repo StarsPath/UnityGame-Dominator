@@ -37,8 +37,6 @@ public class GlobalData : MonoBehaviour
         mapGen.initialize();
         mapGen.generate();
         graph = mapGen.generateGraph();
-        display.initialize();
-        display.drawTerrain();
     }
 
     // Update is called once per frame
@@ -58,10 +56,10 @@ public class GlobalData : MonoBehaviour
         prev[source] = null;
 
         Unit unitData = selectedUnit.GetComponent<Unit>();
-        int newXmin = Mathf.Clamp(unitData.pos.x - unitData.mobility, 0, mapSizeX-1);
-        int newYmin = Mathf.Clamp(unitData.pos.y - unitData.mobility, 0, mapSizeY-1);
-        int newXmax = Mathf.Clamp(unitData.pos.x + unitData.mobility, 0, mapSizeX-1);
-        int newYmax = Mathf.Clamp(unitData.pos.y + unitData.mobility, 0, mapSizeY-1);
+        int newXmin = Mathf.Clamp(unitData.pos.x - unitData.mobility, 0, mapSizeX);
+        int newYmin = Mathf.Clamp(unitData.pos.y - unitData.mobility, 0, mapSizeY);
+        int newXmax = Mathf.Clamp(unitData.pos.x + unitData.mobility, 0, mapSizeX);
+        int newYmax = Mathf.Clamp(unitData.pos.y + unitData.mobility, 0, mapSizeY);
         Vector2Int minPoint = new Vector2Int(newXmin, newYmin);
         Vector2Int maxPoint = new Vector2Int(newXmax, newYmax);
 
@@ -109,14 +107,50 @@ public class GlobalData : MonoBehaviour
         selectedTiles = dist.Where(n => n.Value < Mathf.Infinity).Select(n => n.Key).ToList();
         showPath(selectedTiles);
     }
+    public void PathFindSkip()
+    {
+        Unit unitData = selectedUnit.GetComponent<Unit>();
+        int newXmin = Mathf.Clamp(unitData.pos.x - unitData.range-1, 0, mapSizeX);
+        int newYmin = Mathf.Clamp(unitData.pos.y - unitData.range-1, 0, mapSizeY);
+        int newXmax = Mathf.Clamp(unitData.pos.x + unitData.range+1, 0, mapSizeX);
+        int newYmax = Mathf.Clamp(unitData.pos.y + unitData.range+1, 0, mapSizeY);
+        Vector2Int minPoint = new Vector2Int(newXmin, newYmin);
+        Vector2Int maxPoint = new Vector2Int(newXmax, newYmax);
+
+
+        for (int i = minPoint.x; i < maxPoint.x; i++)
+        {
+            for (int j = minPoint.y; j < maxPoint.y; j++)
+            {
+                if(((int)(Mathf.Abs(i - unitData.pos.x)) + (int)(Mathf.Abs(j - unitData.pos.y))) <= unitData.range)
+                {
+                    selectedTiles.Add(graph[i, j]);
+                }
+            }
+        }
+        showPath(selectedTiles);
+    }
     public void showPath(List<Node> dist)
     {
+        Unit unitData = selectedUnit.GetComponent<Unit>();
         if (selectedUnit)
         {
-            foreach (Node n in dist)
+            switch (unitData.status)
             {
-                terrainGameObjects[n.x, n.y].GetComponent<ClickableTile>().setSelected();
+                case Unit.Status.Unselected:
+                    foreach (Node n in dist)
+                    {
+                        terrainGameObjects[n.x, n.y].GetComponent<ClickableTile>().setSelected();
+                    }
+                    break;
+                case Unit.Status.Moved:
+                    foreach (Node n in dist)
+                    {
+                        terrainGameObjects[n.x, n.y].GetComponent<ClickableTile>().setRanged();
+                    }
+                    break;
             }
+            
         }
     }
     public void resetSeclection()

@@ -13,7 +13,8 @@ public class MapGenerator : MonoBehaviour
     public bool randomizeSeed = false;
     private float[,] map;
     private int[,] trueMap;
-    private int[,] costMap;
+    public GameObject[] terrainTiles;
+    //private int[,] costMap;
     void Start()
     {
         
@@ -26,12 +27,13 @@ public class MapGenerator : MonoBehaviour
     }
     public void initialize()
     {
+        terrainTiles = globalData.getTerrainTiles();
         Vector2Int size = globalData.getSize();
         sizeX = Mathf.Clamp(size.x, 10, 1000);
         sizeY = Mathf.Clamp(size.y, 10, 1000);
         map = new float[sizeX, sizeY];
         trueMap = new int[sizeX, sizeY];
-        costMap = new int[sizeX, sizeY];
+        //costMap = new int[sizeX, sizeY];
     }
     public void generate()
     {
@@ -58,6 +60,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
         convertTrueMap();
+        drawTerrain();
     }
     public void convertTrueMap()
     {
@@ -140,5 +143,18 @@ public class MapGenerator : MonoBehaviour
             }
         }
         return graph;
+    }
+    public void drawTerrain()
+    {
+        for (int i = 0; i < trueMap.GetLength(0); i++)
+        {
+            for (int j = 0; j < trueMap.GetLength(1); j++)
+            {
+                //terrain.SetTile(new Vector3Int(i, j, 0), terrainTiles[terrainData[i, j]]);
+                GameObject terrainTile = Instantiate(terrainTiles[trueMap[i, j]], new Vector3(i, j, 1), Quaternion.identity, GameObject.Find("Map").transform);
+                terrainTile.GetComponent<ClickableTile>().setData(i, j, null);
+                globalData.terrainGameObjects[i, j] = terrainTile;
+            }
+        }
     }
 }

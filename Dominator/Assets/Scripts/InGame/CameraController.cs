@@ -8,13 +8,14 @@ public class CameraController : MonoBehaviour
 {
     // Start is called before the first frame update
     public GlobalData globalData;
+    public MapEditor mapEditor;
     private float panSpeed = 30f;
     private float panBorderThickness = Mathf.NegativeInfinity;
     private float scrollSpeed = 10f;
     private Vector2Int size;
     void Start()
     {
-        size = globalData.getSize();
+        resetCamera();
         //Vector3 pos = transform.position;
         //pos.x = (size.x - 1) / 2;
         //pos.y = (size.y - 1) / 2;
@@ -56,5 +57,12 @@ public class CameraController : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, 0, size.y);
 
         transform.position = pos;
+    }
+    public void resetCamera()
+    {
+        if (globalData)
+            size = globalData.getSize();
+        else
+            size = mapEditor.getSize();
     }
 }

@@ -5,10 +5,16 @@ using UnityEngine;
 public class ClickableTile : MonoBehaviour
 {
     // Start is called before the first frame update
+    public enum State
+    {
+        unselected,
+        selected,
+        ranged
+    }
     public GlobalData globalData;
     public Vector2Int pos;
     public GameObject unitOnTile;
-    public bool selected;
+    public State state;
 
     private SpriteRenderer sp;
     private Collider2D co;
@@ -44,36 +50,47 @@ public class ClickableTile : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        if (selected)
+        switch (state)
         {
-            globalData.moveUnitTo(pos.x, pos.y);
+            case State.selected: globalData.moveUnitTo(pos.x, pos.y);
+                break;
+            case State.ranged: 
+                break;
         }
     }
-    public void setData(int x, int y, GameObject unitOnTile, bool selected)
+    public void setData(int x, int y, GameObject unitOnTile)
     {
         pos.x = x;
         pos.y = y;
         this.unitOnTile = unitOnTile;
-        this.selected = selected;
+        this.state = State.unselected;
     }
     public void setSelected()
     {
-        selected = true;
+        state = State.selected;
         toggleSelected();
 
     }
     public void unselected()
     {
-        selected = false;
+        state = State.unselected;
+        toggleSelected();
+    }
+    public void setRanged()
+    {
+        state = State.ranged;
         toggleSelected();
     }
     public void toggleSelected()
     {
-        if (selected)
+        switch (state)
         {
-            sp.color = new Color(0.9f, 0.9f, 0.9f, 1f);
+            case State.unselected: sp.color = new Color(1f, 1f, 1f, 1f);
+                break;
+            case State.selected: sp.color = new Color(0.9f, 0.9f, 0.9f, 1f);
+                break;
+            case State.ranged: sp.color = new Color(1f, 0.4f, 0.4f, 1f);
+                break;
         }
-        else
-            sp.color = new Color(1f, 1f, 1f, 1f);
     }
 }

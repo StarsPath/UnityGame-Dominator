@@ -91,12 +91,24 @@ public class Unit : MonoBehaviour
         else
         {
             globalData.setSelectedUnit(gameObject);
-            globalData.pathFind();
+            switch (status)
+            {
+                case Status.Unselected: 
+                    if (unit.type == UnitScriptable.Type.Interceptor) 
+                        globalData.PathFindSkip();
+                    else
+                        globalData.pathFind();
+                    break;
+                case Status.Moved: globalData.PathFindSkip();
+                    break;
+            }
+            
         }
     }
     public void moveTo(int x, int y)
     {
         pos.x = x;
         pos.y = y;
+        status = Status.Moved;
     }
 }
