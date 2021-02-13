@@ -85,7 +85,7 @@ public class GlobalData : MonoBehaviour
             foreach (Node v in u.neighbours)
             {
                 //Debug.Log(u.neighbours);
-                Debug.Log(units[1, 1]);
+                //Debug.Log(units[1, 1]);
                 float alt = dist[u] + u.distanceTo(v) + v.cost-1;
                 if (alt > selectedUnit.GetComponent<Unit>().mobility)
                     continue;

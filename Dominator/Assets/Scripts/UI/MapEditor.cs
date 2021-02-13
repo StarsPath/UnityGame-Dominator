@@ -3,10 +3,56 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using UnityEditor;
 
 public class MapEditor : MonoBehaviour
 {
     // Start is called before the first frame update
+    public string path;
+    [System.Serializable]
+    public class MapData
+    {
+        public string fileName;
+        public int mapX;
+        public int mapY;
+        public float scale;
+        public int seed;
+        public bool randomizeSeed;
+        public float[,] map;
+        public int[,] trueMap;
+        //public GameObject[,] terrainGameObjects;
+
+        public float mountainLevel;
+        public float hillsLevel;
+        public float forestLevel;
+        public float groundLevel;
+        public MapData()
+        {
+            mapX = 10;
+            mapY = 10;
+            scale = 3f;
+            seed = 0;
+
+            randomizeSeed = false;
+            mountainLevel = 80;
+            hillsLevel = 65;
+            forestLevel = 50;
+            groundLevel = 40;
+        }
+        public void initMap()
+        {
+            map = new float[mapX, mapY];
+            trueMap = new int[mapX, mapY];
+        }
+    }
+
+    MapData mapData;
+
+    
+    /*public string fileName;
+
     public int mapX = 10;
     public int mapY = 10;
     public float scale = 3f;
@@ -18,11 +64,12 @@ public class MapEditor : MonoBehaviour
     public float mountainLevel = 80;
     public float hillsLevel = 65;
     public float forestLevel = 50;
-    public float groundLevel = 40;
+    public float groundLevel = 40;*/
 
+    public TMP_InputField fileNameField;
 
     public GameObject[] terrainTiles;
-    public GameObject[,] terrainGameObjects;
+    //public GameObject[,] terrainGameObjects;
 
     public TMP_InputField MapXField;
     public TMP_InputField MapYField;
@@ -47,7 +94,8 @@ public class MapEditor : MonoBehaviour
 
     void Start()
     {
-        
+        mapData = new MapData();
+        path = Application.persistentDataPath + "/map/";
     }
 
     // Update is called once per frame
@@ -57,79 +105,87 @@ public class MapEditor : MonoBehaviour
     }
     public void initializeMap()
     {
-        map = new float[mapX, mapY];
-        trueMap = new int[mapX, mapY];
-        terrainGameObjects = new GameObject[mapX, mapY];
+        //mapData.map = new float[mapData.mapX, mapData.mapY];
+        //mapData.trueMap = new int[mapData.mapX, mapData.mapY];
+        //mapData.terrainGameObjects = new GameObject[mapData.mapX, mapData.mapY];
     }
     public void generate()
     {
-        initializeMap();
-        if (randomizeSeed)
-            seed = (int)(Random.value * 100000);
-        Random.InitState(seed);
+        //initializeMap();
+        //Debug.Log(mapData.map[0,0]);
+        //Debug.Log(mapData.mapX);
+        //Debug.Log(mapData.mapY);
+        mapData.initMap();
+
+        if (mapData.randomizeSeed)
+        {
+            mapData.seed = (int)(Random.value * 100000);
+            mapData.fileName = mapData.seed.ToString();
+        }
+        Random.InitState(mapData.seed);
         RandomSeedFeedback();
         float initX = Random.Range(-1000f, 1000f);
         float initY = Random.Range(-1000f, 1000f);
-        for (int i = 0; i < mapX; i++)
+        for (int i = 0; i < mapData.mapX; i++)
         {
-            for (int j = 0; j < mapY; j++)
+            for (int j = 0; j < mapData.mapY; j++)
             {
-                map[i, j] = Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
+                mapData.map[i, j] = Mathf.PerlinNoise((initX + i + 1) / mapData.scale, (initY + j + 1) / mapData.scale) * 50;
             }
         }
         initX = Random.Range(-1000f, 1000f);
         initY = Random.Range(-1000f, 1000f);
-        for (int i = 0; i < mapX; i++)
+        for (int i = 0; i < mapData.mapX; i++)
         {
-            for (int j = 0; j < mapY; j++)
+            for (int j = 0; j < mapData.mapY; j++)
             {
-                map[i, j] += Mathf.PerlinNoise((initX + i + 1) / scale, (initY + j + 1) / scale) * 50;
+                mapData.map[i, j] += Mathf.PerlinNoise((initX + i + 1) / mapData.scale, (initY + j + 1) / mapData.scale) * 50;
             }
         }
         refreshMap();
     }
     public void refreshMap()
     {
-        resetMap();
         convertTrueMap();
         drawTerrain();
     }
     public void convertTrueMap()
     {
-        for (int i = 0; i < mapX; i++)
+        for (int i = 0; i < mapData.mapX; i++)
         {
-            for (int j = 0; j < mapY; j++)
+            for (int j = 0; j < mapData.mapY; j++)
             {
-                if (map[i, j] > mountainLevel)   //Mountain
+                if (mapData.map[i, j] > mapData.mountainLevel)   //Mountain
                 {
-                    trueMap[i, j] = 4;
+                    mapData.trueMap[i, j] = 4;
                 }
-                else if (map[i, j] > hillsLevel)    //Hill
+                else if (mapData.map[i, j] > mapData.hillsLevel)    //Hill
                 {
-                    trueMap[i, j] = 3;
+                    mapData.trueMap[i, j] = 3;
                 }
-                else if (map[i, j] > forestLevel)     //Forest
+                else if (mapData.map[i, j] > mapData.forestLevel)     //Forest
                 {
-                    trueMap[i, j] = 2;
+                    mapData.trueMap[i, j] = 2;
                 }
-                else if (map[i, j] > groundLevel)      //Ground
+                else if (mapData.map[i, j] > mapData.groundLevel)      //Ground
                 {
-                    trueMap[i, j] = 1;
+                    mapData.trueMap[i, j] = 1;
                 }
                 else        //Water
-                    trueMap[i, j] = 0;
+                    mapData.trueMap[i, j] = 0;
             }
         }
     }
     public void drawTerrain()
     {
-        for (int i = 0; i < trueMap.GetLength(0); i++)
+        resetMap();
+        for (int i = 0; i < mapData.trueMap.GetLength(0); i++)
         {
-            for (int j = 0; j < trueMap.GetLength(1); j++)
+            for (int j = 0; j < mapData.trueMap.GetLength(1); j++)
             {
-                GameObject terrainTile = Instantiate(terrainTiles[trueMap[i, j]], new Vector3(i, j, 1), Quaternion.identity, GameObject.Find("Map").transform);
+                GameObject terrainTile = Instantiate(terrainTiles[mapData.trueMap[i, j]], new Vector3(i, j, 1), Quaternion.identity, GameObject.Find("Map").transform);
                 terrainTile.GetComponent<ClickableTile>().setData(i, j, null);
-                terrainGameObjects[i, j] = terrainTile;
+                //mapData.terrainGameObjects[i, j] = terrainTile;
             }
         }
     }
@@ -142,11 +198,62 @@ public class MapEditor : MonoBehaviour
     }
     public void save()
     {
+        path = Application.persistentDataPath + "/map/";
+
+        if (!File.Exists(path))
+            Directory.CreateDirectory(Application.persistentDataPath + "/map/");
+
+        string targetPath = EditorUtility.SaveFilePanel("Open Map File", path, mapData.seed.ToString(), "map");
+
+        FileStream stream = new FileStream(targetPath + ".map", FileMode.Create);
+        BinaryFormatter formatter = new BinaryFormatter();
+
+
+        formatter.Serialize(stream, mapData);
+        stream.Close();
 
     }
     public void load()
     {
+        string targetPath = EditorUtility.OpenFilePanel("Open Map File", path, "map");
 
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream stream = new FileStream(targetPath, FileMode.Open);
+
+        mapData = formatter.Deserialize(stream) as MapData;
+
+        stream.Close();
+        drawTerrain();
+        updateAllField();
+    }
+    public void updateAllField()
+    {
+        fileNameField.text = mapData.fileName;
+        MapXSlider.value = mapData.mapX;
+        MapYSlider.value = mapData.mapY;
+        ScaleSlider.value = mapData.scale;
+
+        MapXField.text = mapData.mapX.ToString();
+        MapYField.text = mapData.mapY.ToString();
+        ScaleField.text = mapData.scale.ToString();
+
+        MountainLevelSlider.value = mapData.mountainLevel;
+        HillsLevelSlider.value = mapData.hillsLevel;
+        ForestLevelSlider.value = mapData.forestLevel;
+        GroundLevelSlider.value = mapData.groundLevel;
+
+        MountainLevelField.text = mapData.mountainLevel.ToString();
+        HillsLevelField.text = mapData.hillsLevel.ToString();
+        ForestLevelField.text = mapData.forestLevel.ToString();
+        GroundLevelField.text = mapData.groundLevel.ToString();
+
+        MapSeedField.text = mapData.seed.ToString();
+        RandomSeedToggle.isOn = mapData.randomizeSeed;
+        
+    }
+    public void fileNameChange()
+    {
+        mapData.fileName = fileNameField.text;
     }
     public void sliderChange()
     {
@@ -156,9 +263,9 @@ public class MapEditor : MonoBehaviour
         MapXField.text = sliderXValue.ToString();
         MapYField.text = sliderYValue.ToString();
         ScaleField.text = sliderScaleValue.ToString();
-        mapX = sliderXValue;
-        mapY = sliderYValue;
-        scale = sliderScaleValue;
+        mapData.mapX = sliderXValue;
+        mapData.mapY = sliderYValue;
+        mapData.scale = sliderScaleValue;
     }
     public void fieldChange()
     {
@@ -173,9 +280,9 @@ public class MapEditor : MonoBehaviour
         MapYField.text = sliderYValue.ToString();
         ScaleField.text = sliderScaleValue.ToString();
 
-        mapX = sliderXValue;
-        mapY = sliderYValue;
-        scale = sliderScaleValue;
+        mapData.mapX = sliderXValue;
+        mapData.mapY = sliderYValue;
+        mapData.scale = sliderScaleValue;
     }
     public void levelSliderChange()
     {
@@ -189,10 +296,10 @@ public class MapEditor : MonoBehaviour
         ForestLevelField.text = forestValue.ToString();
         GroundLevelField.text = groundValue.ToString();
 
-        mountainLevel = mountainValue;
-        hillsLevel = hillsValue;
-        forestLevel = forestValue;
-        groundLevel = groundValue;
+        mapData.mountainLevel = mountainValue;
+        mapData.hillsLevel = hillsValue;
+        mapData.forestLevel = forestValue;
+        mapData.groundLevel = groundValue;
 
     }
     public void levelFieldChange()
@@ -207,45 +314,49 @@ public class MapEditor : MonoBehaviour
         ForestLevelSlider.value = forestValue;
         GroundLevelSlider.value = groundValue;
 
-        mountainLevel = mountainValue;
-        hillsLevel = hillsValue;
-        forestLevel = forestValue;
-        groundLevel = groundValue;
+        mapData.mountainLevel = mountainValue;
+        mapData.hillsLevel = hillsValue;
+        mapData.forestLevel = forestValue;
+        mapData.groundLevel = groundValue;
     }
     public void setDefault()
     {
-        mountainLevel = 80;
-        hillsLevel = 65;
-        forestLevel = 50;
-        groundLevel = 40;
+        mapData.mountainLevel = 80;
+        mapData.hillsLevel = 65;
+        mapData.forestLevel = 50;
+        mapData.groundLevel = 40;
 
-        MountainLevelSlider.value = mountainLevel;
-        HillsLevelSlider.value = hillsLevel;
-        ForestLevelSlider.value = forestLevel;
-        GroundLevelSlider.value = groundLevel;
+        MountainLevelSlider.value = mapData.mountainLevel;
+        HillsLevelSlider.value = mapData.hillsLevel;
+        ForestLevelSlider.value = mapData.forestLevel;
+        GroundLevelSlider.value = mapData.groundLevel;
 
-        MountainLevelField.text = mountainLevel.ToString();
-        HillsLevelField.text = hillsLevel.ToString();
-        ForestLevelField.text = forestLevel.ToString();
-        GroundLevelField.text = groundLevel.ToString();
+        MountainLevelField.text = mapData.mountainLevel.ToString();
+        HillsLevelField.text = mapData.hillsLevel.ToString();
+        ForestLevelField.text = mapData.forestLevel.ToString();
+        GroundLevelField.text = mapData.groundLevel.ToString();
     }
     public void setRanomize()
     {
         if (string.IsNullOrEmpty(MapSeedField.text))
         {
-            seed = 0;
+            mapData.seed = 0;
             MapSeedField.text = "0";
         }
         else
-            seed = int.Parse(MapSeedField.text);
-        randomizeSeed = RandomSeedToggle.isOn;
+            mapData.seed = int.Parse(MapSeedField.text);
+        mapData.randomizeSeed = RandomSeedToggle.isOn;
     }
     public void RandomSeedFeedback()
     {
-        MapSeedField.text = seed.ToString();
+        MapSeedField.text = mapData.seed.ToString();
     }
     public Vector2Int getSize()
     {
-        return new Vector2Int(mapX, mapY);
+        if (mapData == null)
+            return new Vector2Int(0, 0);
+        Debug.Log(mapData.mapX);
+        Debug.Log(mapData.mapY);
+        return new Vector2Int(mapData.mapX, mapData.mapY);
     }
 }
